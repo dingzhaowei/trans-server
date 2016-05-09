@@ -6,9 +6,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -116,6 +119,29 @@ public class TransUtil {
         }
         gzip.close();
         return out.toString("UTF-8");
+    }
+
+    public static String makeUrlWithQueryParams(String url, Map<String, String> params) {
+        if (params == null || params.isEmpty()) {
+            return url;
+        }
+
+        StringBuilder sb = new StringBuilder(url + "?");
+        Iterator<Entry<String, String>> iter = params.entrySet().iterator();
+        try {
+            while (iter.hasNext()) {
+                Entry<String, String> entry = iter.next();
+                String key = URLEncoder.encode(entry.getKey(), "UTF-8");
+                String value = URLEncoder.encode(entry.getValue(), "UTF-8");
+                sb.append(String.format("%s=%s", key, value));
+                if (iter.hasNext()) {
+                    sb.append('&');
+                }
+            }
+            return sb.toString();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to make url with query params", e);
+        }
     }
 
 }
