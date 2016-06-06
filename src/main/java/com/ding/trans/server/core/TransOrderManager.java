@@ -43,6 +43,10 @@ public class TransOrderManager {
         }, 1000);
     }
 
+    public List<TransOrder> getTransOrders(String userName) {
+        return transDao.getTransOrders(userName);
+    }
+
     public void syncTransOrders() throws Exception {
         Set<String> s = new HashSet<>();
         log.info("Synchronizing the orders with the site ...");

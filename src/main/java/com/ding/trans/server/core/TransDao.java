@@ -40,8 +40,18 @@ public class TransDao {
 
     public Account getAccount(String userName) {
         MongoCollection<Document> coll = getCollection("accounts");
-        Document doc = coll.find(eq("username", userName)).first();
+        Document doc = coll.find(eq("userName", userName)).first();
         return doc == null ? null : Account.fromDocument(doc);
+    }
+
+    public List<TransOrder> getTransOrders(String userName) {
+        MongoCollection<Document> coll = getCollection("transOrders");
+        List<TransOrder> orders = new ArrayList<>();
+        Document filter = new Document("userName", userName);
+        for (Document doc : coll.find(filter)) {
+            orders.add(TransOrder.fromDocument(doc));
+        }
+        return orders;
     }
 
     public void insertTransOrder(TransOrder order) {

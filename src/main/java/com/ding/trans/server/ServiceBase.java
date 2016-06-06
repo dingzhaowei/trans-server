@@ -12,11 +12,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jackson.map.ObjectMapper;
+
 import com.ding.trans.server.core.TransUtil;
 
 public class ServiceBase extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 4547341216443613175L;
+
+    protected static final ObjectMapper om = new ObjectMapper();
 
     protected Map<String, String> getRequestParams(HttpServletRequest req)
             throws UnsupportedEncodingException, IOException {
