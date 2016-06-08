@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.ding.trans.server.core.TransOrderManager;
 import com.ding.trans.server.model.TransOrder;
+import com.ding.trans.server.model.TransOrderDetail;
 
 public class TransOrderService extends ServiceBase {
 
@@ -30,8 +31,13 @@ public class TransOrderService extends ServiceBase {
         String action = params.get("action");
 
         try {
-            if (action.equals("get")) {
+            if (action.equals("getOrders")) {
                 List<TransOrder> result = manager.getTransOrders(userName);
+                sendResult(resp, om.writeValueAsString(result), true);
+            } else if (action.equals("getDetail")) {
+                String transId = params.get("transId");
+                TransOrderDetail result = null;
+                result = manager.getTransOrderDetail(userName, transId);
                 sendResult(resp, om.writeValueAsString(result), true);
             } else {
                 String error = URLEncoder.encode("不支持的操作: " + action, "UTF-8");

@@ -54,6 +54,12 @@ public class TransDao {
         return orders;
     }
 
+    public TransOrder getTransOrder(String transId) {
+        MongoCollection<Document> coll = getCollection("transOrders");
+        Document doc = coll.find(new Document("transId", transId)).first();
+        return doc == null ? null : TransOrder.fromDocument(doc);
+    }
+
     public void insertTransOrder(TransOrder order) {
         MongoCollection<Document> coll = getCollection("transOrders");
         Document doc = order.toDocument();

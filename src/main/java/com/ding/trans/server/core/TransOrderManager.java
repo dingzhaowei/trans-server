@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.ding.trans.server.model.TransOrder;
 import com.ding.trans.server.model.TransOrderColl;
+import com.ding.trans.server.model.TransOrderDetail;
 
 public class TransOrderManager {
 
@@ -45,6 +46,25 @@ public class TransOrderManager {
 
     public List<TransOrder> getTransOrders(String userName) {
         return transDao.getTransOrders(userName);
+    }
+
+    public TransOrderDetail getTransOrderDetail(String userName, String transId) {
+        TransOrder order = transDao.getTransOrder(transId);
+        try {
+            if (order == null) {
+                throw new RuntimeException("No order found");
+            }
+            if (!order.getUserName().equals(userName)) {
+                throw new RuntimeException("Not authorized");
+            }
+            String orderNo = order.getOrderNo();
+            int flag = orderNo.equals(transId) ? 2 : 3;
+            return transSite.fetchOrderDetail(orderNo, flag);
+        } catch (Exception e) {
+            String fmt = "Failed to get order detail: %s %s";
+            log.error(String.format(fmt, userName, transId), e);
+            return TransOrderDetail.createEmptyTransOrderDetail();
+        }
     }
 
     public void syncTransOrders() throws Exception {
